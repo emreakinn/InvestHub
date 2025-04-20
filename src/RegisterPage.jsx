@@ -1,39 +1,49 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
 import RegisterInput from './components/inputs/Register/RegisterInput'
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { UserContext } from './context/UserContext';
 
 
 function RegisterPage() {
 
+    const navigate = useNavigate();
     const { username, setUsername, email, setEmail, password, setPassword, users, setUsers, setCurrentUser, setIsLoggedIn, err, setErr } = useContext(UserContext);
 
+    useEffect(() => {
+        setErr('')
+        setUsername('')
+        setEmail('')
+        setPassword('')
+    }, []);
+
     const handleRegister = () => {
+        setErr('')
         if (username && email && password) {
-            const emailControl = users.find(user => user.email === email)
-            if (!emailControl) {
-                const newUser = {
-                    id: Date.now(),
-                    username,
-                    email,
-                    password
+            const isValidEmail = (email) => /\S+@\S+\.\S+/.test(email);
+            if (isValidEmail(email)) {
+                const emailControl = users?.find(user => user.email === email)
+                if (!emailControl) {
+                    const newUser = {
+                        id: Date.now(),
+                        username,
+                        email,
+                        password
+                    }
+                    setUsers([...users, newUser])
+                    setCurrentUser(newUser)
+                    setIsLoggedIn(true)
+
+                    navigate('/Dashboard');
+                } else {
+                    setErr('Bu mail daha önce kullanılmış')
                 }
-                setUsers([...users, newUser])
-                setCurrentUser(newUser)
-                setIsLoggedIn(true)
-                setUsername('')
-                setEmail('')
-                setPassword('')
             } else {
-                setErr('Bu mail daha önce kullanılmış')
+                setErr('Geçerli bir mail adresi giriniz')
             }
         } else {
             setErr('Lütfen bütün bilgileri doldurun')
         }
     }
-
-    console.log(users)
-
 
     return (
         <div className='flex justify-center items-center h-screen flex-col bg-[#f9f9f9] gap-15'>

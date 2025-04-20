@@ -1,4 +1,7 @@
-import React from 'react'
+import React, { useContext } from 'react'
+import { UserContext } from './context/UserContext';
+import { useNavigate } from 'react-router-dom';
+
 
 function Dashboard() {
 
@@ -89,9 +92,30 @@ function Dashboard() {
         },
     ];
 
+    const navigate = useNavigate();
+
+    const { setIsLoggedIn, currentUser, setCurrentUser } = useContext(UserContext);
+
+    const handleLogout = () => {
+        setIsLoggedIn(false);
+        setCurrentUser(null);
+        navigate('/');
+    };
+
     return (
         <div className='flex items-center flex-col p-8 bg-gray-50 min-h-screen gap-10'>
             <h1 className='text-3xl font-bold'>Yatırım Yapılabilecek Projeler</h1>
+            {currentUser && (
+                <div className="container w-full flex justify-between text-left text-2xl font-semibold">
+                    <h1>Hoş geldin, <span className="text-blue-700">{currentUser.username}</span>!</h1>
+                    <button
+                        onClick={handleLogout}
+                        className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition"
+                    >
+                        Çıkış Yap
+                    </button>
+                </div>
+            )}
             <div className="container mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 {
                     projects.map((project, i) => (
