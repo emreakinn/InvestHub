@@ -1,96 +1,49 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { UserContext } from './context/UserContext';
 import { useNavigate } from 'react-router-dom';
 
 
 function Dashboard() {
 
-    const projects = [
-        {
-            id: 1,
-            name: "BioTechX",
-            category: "Biyoteknoloji",
-            value: 87000,
-            change: 4.1,
-        },
-        {
-            id: 2,
-            name: "SmartFarm",
-            category: "Tarım Teknolojisi",
-            value: 62500,
-            change: -2.3,
-        },
-        {
-            id: 3,
-            name: "FinGo",
-            category: "Finans Teknolojisi",
-            value: 110300,
-            change: 1.8,
-        },
-        {
-            id: 4,
-            name: "GreenVolt",
-            category: "Yenilenebilir Enerji",
-            value: 95800,
-            change: 3.5,
-        },
-        {
-            id: 5,
-            name: "EduNova",
-            category: "Eğitim Teknolojisi",
-            value: 78200,
-            change: -1.2,
-        },
-        {
-            id: 6,
-            name: "HealthSync",
-            category: "Dijital Sağlık",
-            value: 132000,
-            change: 2.7,
-        },
-        {
-            id: 7,
-            name: "RoboCore",
-            category: "Robotik",
-            value: 120000,
-            change: -0.9,
-        },
-        {
-            id: 8,
-            name: "SpaceLink",
-            category: "Uzay Teknolojisi",
-            value: 140000,
-            change: 5.0,
-        },
-        {
-            id: 9,
-            name: "AquaPure",
-            category: "Su Arıtma Sistemleri",
-            value: 70400,
-            change: -3.4,
-        },
-        {
-            id: 10,
-            name: "VRScene",
-            category: "Sanal Gerçeklik",
-            value: 91700,
-            change: 2.2,
-        },
-        {
-            id: 11,
-            name: "FoodFusion",
-            category: "Gıda Teknolojisi",
-            value: 98000,
-            change: 3.0,
-        },
-        {
-            id: 12,
-            name: "CleanTech",
-            category: "Çevre Teknolojileri",
-            value: 115000,
-            change: -1.8,
-        },
+    const initialProjects = [
+        { id: 1, name: "BioTechX", category: "Biyoteknoloji", initialValue: 87000, value: 87000, change: 0, lastUpdated: Date.now() },
+        { id: 2, name: "SmartFarm", category: "Tarım Teknolojisi", initialValue: 62500, value: 62500, change: 0, lastUpdated: Date.now() },
+        { id: 3, name: "FinGo", category: "Finans Teknolojisi", initialValue: 110300, value: 110300, change: 0, lastUpdated: Date.now() },
+        { id: 4, name: "GreenVolt", category: "Yenilenebilir Enerji", initialValue: 95800, value: 95800, change: 0, lastUpdated: Date.now() },
+        { id: 5, name: "EduNova", category: "Eğitim Teknolojisi", initialValue: 78200, value: 78200, change: 0, lastUpdated: Date.now() },
+        { id: 6, name: "HealthSync", category: "Dijital Sağlık", initialValue: 132000, value: 132000, change: 0, lastUpdated: Date.now() },
+        { id: 7, name: "RoboCore", category: "Robotik", initialValue: 120000, value: 120000, change: 0, lastUpdated: Date.now() },
+        { id: 8, name: "SpaceLink", category: "Uzay Teknolojisi", initialValue: 140000, value: 140000, change: 0, lastUpdated: Date.now() },
+        { id: 9, name: "AquaPure", category: "Su Arıtma Sistemleri", initialValue: 70400, value: 70400, change: 0, lastUpdated: Date.now() },
+        { id: 10, name: "VRScene", category: "Sanal Gerçeklik", initialValue: 91700, value: 91700, change: 0, lastUpdated: Date.now() },
+        { id: 11, name: "FoodFusion", category: "Gıda Teknolojisi", initialValue: 98000, value: 98000, change: 0, lastUpdated: Date.now() },
+        { id: 12, name: "CleanTech", category: "Çevre Teknolojileri", initialValue: 115000, value: 115000, change: 0, lastUpdated: Date.now() },
     ];
+
+    const [projects, setProjects] = useState(initialProjects);
+
+    const updateProjectValues = () => {
+        setProjects(prevProjects =>
+            prevProjects.map(project => {
+                const randomChange = (Math.random() > 0.5 ? 1 : -1) * Math.random() * 0.001;
+                const newValue = project.value * (1 + randomChange);
+                const changePercentage = ((newValue - project.initialValue) / project.initialValue) * 100;
+
+                return {
+                    ...project,
+                    value: newValue,
+                    change: changePercentage,
+                };
+            })
+        );
+    };
+
+    useEffect(() => {
+        const interval = setInterval(updateProjectValues, 1000);
+
+
+        return () => clearInterval(interval);
+    }, []);
 
     const navigate = useNavigate();
 
@@ -122,10 +75,10 @@ function Dashboard() {
                         <div key={project.id} className="bg-white p-6 rounded-xl shadow-md">
                             <h2 className="text-xl font-semibold">{project.name}</h2>
                             <p className="text-sm text-gray-600">Kategori: {project.category}</p>
-                            <p className="text-base font-bold text-gray-800">Değer: {project.value.toLocaleString()}₺</p>
+                            <p className="text-base font-bold text-gray-800">Değer: {parseFloat(project.value).toFixed(2)}₺</p>
                             <p className={`text-sm ${project.change >= 0 ? "text-green-600" : "text-red-600"}`}>
                                 {project.change >= 0 ? "+" : ""}
-                                {project.change}%
+                                {parseFloat(project.change).toFixed(2)}% değişim (son 24 saat)
                             </p>
                             <button className="mt-4 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 cursor-pointer">Yatırım Yap</button>
                         </div>
