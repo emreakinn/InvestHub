@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { UserContext } from './context/UserContext';
 import { useNavigate } from 'react-router-dom';
+import SelectedProject from './components/modal/SelectedProject';
 
 
 function Dashboard() {
@@ -21,6 +22,8 @@ function Dashboard() {
     ];
 
     const [projects, setProjects] = useState(initialProjects);
+    const [isModalOpen, setIsModalOpen] = useState(false)
+    const [selectedProject, setSelectedProject] = useState(null)
 
     const updateProjectValues = () => {
         setProjects(prevProjects =>
@@ -55,6 +58,11 @@ function Dashboard() {
         navigate('/');
     };
 
+    const YatirimYap = (project) => {
+        setSelectedProject(project)
+        setIsModalOpen(true)
+    }
+
     return (
         <div className='flex items-center flex-col p-8 bg-gray-50 min-h-screen gap-10'>
             <h1 className='text-3xl font-bold'>Yatırım Yapılabilecek Projeler</h1>
@@ -69,7 +77,10 @@ function Dashboard() {
                     </button>
                 </div>
             )}
-            <div className="container mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className='container'>
+                <p className="text-lg font-medium text-gray-800">Yatırım Bakiye: <span className="font-bold text-green-600">{currentUser?.balance || 0}₺</span></p>
+            </div>
+            <div className="container mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 relative">
                 {
                     projects.map((project, i) => (
                         <div key={project.id} className="bg-white p-6 rounded-xl shadow-md">
@@ -80,11 +91,17 @@ function Dashboard() {
                                 {project.change >= 0 ? "+" : ""}
                                 {parseFloat(project.change).toFixed(2)}% değişim (son 24 saat)
                             </p>
-                            <button className="mt-4 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 cursor-pointer">Yatırım Yap</button>
+                            <button onClick={() => YatirimYap(project)} className="mt-4 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 cursor-pointer">Yatırım Yap</button>
                         </div>
                     ))
                 }
             </div>
+            {isModalOpen && (
+                <SelectedProject
+                    currentUser={currentUser}
+                    selectedProject={selectedProject}
+                    onClose={() => setIsModalOpen(false)}
+                />)}
         </div>
     )
 }

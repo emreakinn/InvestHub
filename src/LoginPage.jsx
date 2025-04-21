@@ -41,14 +41,15 @@ function LoginPage() {
 
 
     return (
-        <div className='flex justify-center items-center h-screen flex-col bg-[#f9f9f9] gap-15'>
+        <div className='flex justify-center items-center h-screen flex-col bg-[#f9f9f9] gap-5'>
             <h1 className='text-6xl font-bold'>GİRİŞ YAP</h1>
             <LoginInput
 
             />
-            <button onClick={handleLogin} className='bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition'>Giriş Yap</button>
-            <span>Hesabınız yok mu? <Link to="/RegisterPage">Kayıt Ol</Link></span>
             <span className='text-red-500'>{err}</span>
+            <button onClick={handleLogin} className='bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition'>Giriş Yap</button>
+            <span>Hesabınız yok mu? <Link to="/RegisterPage" className='text-blue-700 font-bold'>Kayıt Ol</Link></span>
+
         </div>
     )
 }

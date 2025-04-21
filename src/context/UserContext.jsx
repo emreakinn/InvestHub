@@ -7,6 +7,7 @@ export const UserProvider = ({ children }) => {
     const [username, setUsername] = useState('')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+    const [balance, setBalance] = useState(100000)
 
     const [users, setUsers] = useState([])
 
@@ -31,7 +32,7 @@ export const UserProvider = ({ children }) => {
     };
 
     return (
-        <UserContext.Provider value={{ users, setUsers, isLoggedIn, setIsLoggedIn, currentUser, setCurrentUser, login, logout, err, setErr, username, setUsername, email, setEmail, password, setPassword }}>
+        <UserContext.Provider value={{ users, setUsers, isLoggedIn, setIsLoggedIn, currentUser, setCurrentUser, login, logout, err, setErr, username, setUsername, email, setEmail, password, setPassword, balance, setBalance }}>
             {children}
         </UserContext.Provider>
     );
