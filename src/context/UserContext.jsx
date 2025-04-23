@@ -7,7 +7,7 @@ export const UserProvider = ({ children }) => {
     const [username, setUsername] = useState('')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
-    const [balance, setBalance] = useState(100000)
+    const [balance, setBalance] = useState(1000000)
 
     const [users, setUsers] = useState([])
 

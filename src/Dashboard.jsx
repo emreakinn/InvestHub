@@ -98,9 +98,9 @@ function Dashboard() {
             </div>
             {isModalOpen && (
                 <SelectedProject
-                    currentUser={currentUser}
                     selectedProject={selectedProject}
                     onClose={() => setIsModalOpen(false)}
+                    projects={projects}
                 />)}
         </div>
     )
