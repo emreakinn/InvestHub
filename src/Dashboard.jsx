@@ -2,6 +2,8 @@ import React, { useContext, useEffect, useState } from 'react'
 import { UserContext } from './context/UserContext';
 import { useNavigate } from 'react-router-dom';
 import SelectedProject from './components/modal/SelectedProject';
+import { PortfolioContext } from './context/PortfolioContext';
+import Yatirimlar from './components/Yatirimlar';
 
 
 function Dashboard() {
@@ -51,6 +53,7 @@ function Dashboard() {
     const navigate = useNavigate();
 
     const { setIsLoggedIn, currentUser, setCurrentUser } = useContext(UserContext);
+    const { investments } = useContext(PortfolioContext);
 
     const handleLogout = () => {
         setIsLoggedIn(false);
@@ -102,6 +105,10 @@ function Dashboard() {
                     onClose={() => setIsModalOpen(false)}
                     projects={projects}
                 />)}
+            <h1 className='text-3xl font-bold'>Yatırımlar</h1>
+            <Yatirimlar
+                investments={investments}
+            />
         </div>
     )
 }

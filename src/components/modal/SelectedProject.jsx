@@ -1,17 +1,28 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { UserContext } from '../../context/UserContext';
+import { PortfolioContext } from '../../context/PortfolioContext';
 
 function SelectedProject({ selectedProject, onClose, projects }) {
 
     const { err, setErr, currentUser, setCurrentUser } = useContext(UserContext);
+    const { investments, setInvestments } = useContext(PortfolioContext);
     const [yatirimMiktari, setYatirimMiktari] = useState('')
     const [adet, setAdet] = useState('')
     const projectValue = projects.find((project => project.id === selectedProject.id))
 
     const YatirimYap = () => {
         const miktar = Number(yatirimMiktari);
-        if (miktar < currentUser?.balance) {
+        if (miktar <= currentUser?.balance) {
             setAdet(yatirimMiktari / Number(projectValue.value))
+
+            const yeniYatirim = {
+                projeAdi: selectedProject?.name,
+                yatirilanTutar: yatirimMiktari,
+                adet: parseFloat((miktar / Number(projectValue.value)).toFixed(2)),
+                alinanDeger: parseFloat((projectValue?.value).toFixed(2)),
+            }
+            setInvestments([...investments, yeniYatirim])
+
 
             const yeniBakiye = currentUser.balance - miktar
             setCurrentUser({ ...currentUser, balance: yeniBakiye })
