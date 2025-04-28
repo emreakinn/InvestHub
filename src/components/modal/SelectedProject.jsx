@@ -13,15 +13,23 @@ function SelectedProject({ selectedProject, onClose, projects }) {
     const YatirimYap = () => {
         const miktar = Number(yatirimMiktari);
         if (miktar <= currentUser?.balance) {
-            setAdet(yatirimMiktari / Number(projectValue.value))
+            const mevcutYatirim = investments.find(yatirim => yatirim.projeAdi === selectedProject?.name)
+            if (mevcutYatirim) {
+                mevcutYatirim.yatirilanTutar += miktar;
+                mevcutYatirim.adet += parseFloat((miktar / Number(projectValue?.value || 1)).toFixed(2))
+                mevcutYatirim.guncelDeger += parseFloat((projectValue?.value || 0).toFixed(2))
+            } else {
+                setAdet(miktar / Number(projectValue?.value || 1))
+                const yeniYatirim = {
+                    projeAdi: selectedProject?.name,
+                    yatirilanTutar: miktar,
+                    adet: parseFloat((miktar / Number(projectValue.value)).toFixed(2)),
+                    alinanDeger: parseFloat((selectedProject.value).toFixed(2)),
+                    guncelDeger: parseFloat((projectValue?.value || 0).toFixed(2)),
+                }
 
-            const yeniYatirim = {
-                projeAdi: selectedProject?.name,
-                yatirilanTutar: yatirimMiktari,
-                adet: parseFloat((miktar / Number(projectValue.value)).toFixed(2)),
-                alinanDeger: parseFloat((projectValue?.value).toFixed(2)),
+                setInvestments([...investments, yeniYatirim])
             }
-            setInvestments([...investments, yeniYatirim])
 
 
             const yeniBakiye = currentUser.balance - miktar

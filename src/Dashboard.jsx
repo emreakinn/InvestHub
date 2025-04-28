@@ -26,6 +26,7 @@ function Dashboard() {
     const [projects, setProjects] = useState(initialProjects);
     const [isModalOpen, setIsModalOpen] = useState(false)
     const [selectedProject, setSelectedProject] = useState(null)
+    const [sellProject, setSellProject] = useState(null)
 
     const updateProjectValues = () => {
         setProjects(prevProjects =>
@@ -61,7 +62,7 @@ function Dashboard() {
         navigate('/');
     };
 
-    const YatirimYap = (project) => {
+    const yatirimYap = (project) => {
         setSelectedProject(project)
         setIsModalOpen(true)
     }
@@ -83,7 +84,7 @@ function Dashboard() {
             <div className='container'>
                 <p className="text-lg font-medium text-gray-800">Yatırım Bakiye: <span className="font-bold text-green-600">{currentUser?.balance || 0}₺</span></p>
             </div>
-            <div className="container mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 relative">
+            <div className="container mx-auto grid grid-cols-1 lg:grid-cols-4 gap-6 relative">
                 {
                     projects.map((project, i) => (
                         <div key={project.id} className="bg-white p-6 rounded-xl shadow-md">
@@ -94,7 +95,7 @@ function Dashboard() {
                                 {project.change >= 0 ? "+" : ""}
                                 {parseFloat(project.change).toFixed(2)}% değişim (son 24 saat)
                             </p>
-                            <button onClick={() => YatirimYap(project)} className="mt-4 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 cursor-pointer">Yatırım Yap</button>
+                            <button onClick={() => yatirimYap(project)} className="mt-4 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 cursor-pointer">Yatırım Yap</button>
                         </div>
                     ))
                 }
@@ -108,6 +109,9 @@ function Dashboard() {
             <h1 className='text-3xl font-bold'>Yatırımlar</h1>
             <Yatirimlar
                 investments={investments}
+                projects={projects}
+                sellProject={sellProject}
+                setSellProject={setSellProject}
             />
         </div>
     )
