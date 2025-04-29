@@ -12,7 +12,7 @@ export const UserProvider = ({ children }) => {
     const [users, setUsers] = useState([])
 
     const [isLoggedIn, setIsLoggedIn] = useState(false)
-    const [currentUser, setCurrentUser] = useState(null);
+    const [currentUser, setCurrentUser] = useState({ balance: 0 });
     const [err, setErr] = useState(null)
 
     const login = (email, password) => {

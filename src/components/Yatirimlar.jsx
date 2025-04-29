@@ -9,6 +9,8 @@ const Yatirimlar = ({ projects, investments }) => {
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedInvestment, setSelectedInvestment] = useState(null);
+    const [satilanAdet, setSatilanAdet] = useState('')
+
 
     const openModal = (yatirim) => {
         setSelectedInvestment(yatirim);
@@ -19,6 +21,55 @@ const Yatirimlar = ({ projects, investments }) => {
         setIsModalOpen(false);
         setSelectedInvestment(null);
     };
+
+    const yatirimSat = () => {
+        const miktar = Number(satilanAdet);
+
+        // Geçerli miktar kontrolü
+        if (isNaN(miktar) || miktar <= 0) {
+            alert('Lütfen geçerli bir miktar girin. Miktar sıfırdan küçük olamaz.');
+            return;
+        }
+
+        if (miktar > 0 && miktar <= selectedInvestment.adet) {
+            const proje = projects.find(p => p.name === selectedInvestment.projeAdi);
+            const guncelDeger = Number(proje?.value || 0);
+
+            const gelir = miktar * guncelDeger;
+
+
+            setCurrentUser({ ...currentUser, balance: Number((currentUser.balance + gelir).toFixed(2)) });
+
+
+            const yeniInvestments = investments.map((yatirim) => {
+                if (yatirim.projeAdi === selectedInvestment.projeAdi) {
+                    const yeniAdet = yatirim.adet - miktar;
+
+                    if (yeniAdet > 0) {
+
+                        return {
+                            ...yatirim,
+                            adet: yeniAdet.toFixed(2),  // Yatırımın yeni adet değeri
+                            yatirilanTutar: (yatirim.yatirilanTutar * (yeniAdet / yatirim.adet)).toFixed(2),  // 
+                        };
+                    } else {
+
+                        return null;
+                    }
+                }
+                return yatirim;
+            }).filter(Boolean);
+
+
+            setInvestments(yeniInvestments);
+
+
+            closeModal();
+        } else {
+            alert('Geçersiz miktar! Satılacak adet, mevcut adetten fazla olamaz.');
+        }
+    }
+
 
     return (
         <div className="container mx-auto flex gap-6">
@@ -49,10 +100,32 @@ const Yatirimlar = ({ projects, investments }) => {
 
             {/* Modal  */}
             {isModalOpen && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-                    <div className="bg-white p-6 rounded-xl shadow-md w-96">
-                        <h2 className="text-lg font-bold mb-4">Yatırım Sat</h2>
-                        <button onClick={closeModal} className="bg-gray-300 text-black px-4 py-2 rounded">İptal</button>
+                <div className="w-[400px] h-[400px] flex flex-col justify-center gap-5 p-6 rounded-2xl shadow-xl bg-blue-700 text-white absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                    <p>Proje: <span className='font-bold'>{selectedInvestment?.projeAdi}</span></p>
+                    <p>Bakiye: <span className='font-bold'>{currentUser?.balance || 0}₺</span></p>
+                    <p>Adet: <span className='font-bold'>{selectedInvestment?.adet}</span></p>
+                    {investments.map((i, index) => {
+                        const proje = projects.find(p => p.name === i.projeAdi);
+                        const guncelDeger = proje?.value || 0;
+                        return (
+                            <div key={index}>
+                                <p>Proje Değeri: <span className="font-bold">{parseFloat(guncelDeger).toFixed(2)}₺</span></p>
+                                <p>Değeri: <span className="font-bold">{(satilanAdet * guncelDeger).toFixed(2)}₺</span></p>
+                            </div>
+                        )
+
+                    })}
+
+                    <input
+                        className='placeholder-white p-2 rounded-md outline-none border'
+                        type="number"
+                        placeholder='Satılacak Adet'
+                        value={satilanAdet}
+                        onChange={(e) => setSatilanAdet(e.target.value)}
+                    />
+                    <div className='flex justify-between'>
+                        <button onClick={closeModal} className='bg-gray-200 text-blue-700 px-3 py-1 rounded-md'>Vazgeç</button>
+                        <button onClick={yatirimSat} className='bg-gray-200 text-blue-700 px-3 py-1 rounded-md'>Sat</button>
                     </div>
                 </div>
             )}

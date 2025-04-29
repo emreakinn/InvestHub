@@ -109,6 +109,7 @@ function Dashboard() {
             <h1 className='text-3xl font-bold'>Yatırımlar</h1>
             <Yatirimlar
                 investments={investments}
+                selectedProject={selectedProject}
                 projects={projects}
                 sellProject={sellProject}
                 setSellProject={setSellProject}
