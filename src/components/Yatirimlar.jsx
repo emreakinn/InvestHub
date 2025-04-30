@@ -4,7 +4,7 @@ import { PortfolioContext } from '../context/PortfolioContext';
 
 const Yatirimlar = ({ projects, investments }) => {
 
-    const { err, setErr, currentUser, setCurrentUser } = useContext(UserContext);
+    const { currentUser, setCurrentUser } = useContext(UserContext);
     const { setInvestments } = useContext(PortfolioContext);
 
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -85,7 +85,7 @@ const Yatirimlar = ({ projects, investments }) => {
                             <div key={index} className="bg-white p-6 rounded-xl shadow-md">
                                 <p>Proje Adı: <span className="font-bold">{yatirim.projeAdi}</span></p>
                                 <p>Yatırılan Tutar: <span className="font-bold">{yatirim.yatirilanTutar}₺</span></p>
-                                <p>Adet: <span className="font-bold">{yatirim.adet}</span></p>
+                                <p>Adet: <span className="font-bold">{(yatirim.adet).toFixed(2)}</span></p>
                                 <p>Mevcut Değer: <span className="font-bold">{yatirim.alinanDeger}₺</span></p>
                                 <p>Proje Değeri: <span className="font-bold">{parseFloat(guncelDeger).toFixed(2)}₺</span></p> {/* Dinamik değer */}
                                 <p>Fark: <span className={`text-sm ${fark >= 0 ? "text-green-600 font-bold" : "text-red-600 font-bold"}`}>{parseFloat(fark).toFixed(2)}%</span></p> {/* Dinamik değer */}
@@ -99,22 +99,25 @@ const Yatirimlar = ({ projects, investments }) => {
             )}
 
             {/* Modal  */}
-            {isModalOpen && (
+            {isModalOpen && selectedInvestment && (
                 <div className="w-[400px] h-[400px] flex flex-col justify-center gap-5 p-6 rounded-2xl shadow-xl bg-blue-700 text-white absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
                     <p>Proje: <span className='font-bold'>{selectedInvestment?.projeAdi}</span></p>
                     <p>Bakiye: <span className='font-bold'>{currentUser?.balance || 0}₺</span></p>
                     <p>Adet: <span className='font-bold'>{selectedInvestment?.adet}</span></p>
-                    {investments.map((i, index) => {
-                        const proje = projects.find(p => p.name === i.projeAdi);
-                        const guncelDeger = proje?.value || 0;
-                        return (
-                            <div key={index}>
-                                <p>Proje Değeri: <span className="font-bold">{parseFloat(guncelDeger).toFixed(2)}₺</span></p>
-                                <p>Değeri: <span className="font-bold">{(satilanAdet * guncelDeger).toFixed(2)}₺</span></p>
-                            </div>
-                        )
-
-                    })}
+                    <div>
+                        {investments
+                            .filter(yatirim => yatirim.projeAdi === selectedInvestment.projeAdi)
+                            .map((yatirim, index) => {
+                                const proje = projects.find(p => p.name === yatirim.projeAdi);
+                                const guncelDeger = proje?.value || 0;
+                                return (
+                                    <div key={index}>
+                                        <p>Proje Değeri: <span className="font-bold">{parseFloat(guncelDeger).toFixed(2)}₺</span></p>
+                                        <p>Değeri: <span className="font-bold">{(satilanAdet * guncelDeger).toFixed(2)}₺</span></p>
+                                    </div>
+                                );
+                            })}
+                    </div>
 
                     <input
                         className='placeholder-white p-2 rounded-md outline-none border'

@@ -23,8 +23,10 @@ function LoginPage() {
                 const user = users.find(user => user.email === email && user.password === password)
                 if (user) {
                     setIsLoggedIn(true)
-                    setCurrentUser(user)
-
+                    setCurrentUser({
+                        ...user,
+                        balance: user.balance  // Eğer balance yoksa varsayılan değer ata
+                    });
                     navigate('/Dashboard');
                 } else {
                     setEmail('')

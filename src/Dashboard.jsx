@@ -82,7 +82,7 @@ function Dashboard() {
                 </div>
             )}
             <div className='container'>
-                <p className="text-lg font-medium text-gray-800">Yatırım Bakiye: <span className="font-bold text-green-600">{currentUser?.balance || 0}₺</span></p>
+                <p className="text-lg font-medium text-gray-800">Yatırım Bakiye: <span className="font-bold text-green-600">{(currentUser?.balance || 0).toFixed(2)}₺</span></p>
             </div>
             <div className="container mx-auto grid grid-cols-1 lg:grid-cols-4 gap-6 relative">
                 {

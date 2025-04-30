@@ -4,7 +4,7 @@ import { PortfolioContext } from '../../context/PortfolioContext';
 
 function SelectedProject({ selectedProject, onClose, projects }) {
 
-    const { err, setErr, currentUser, setCurrentUser } = useContext(UserContext);
+    const { err, setErr, currentUser, updateBalance } = useContext(UserContext);
     const { investments, setInvestments } = useContext(PortfolioContext);
     const [yatirimMiktari, setYatirimMiktari] = useState('')
     const [adet, setAdet] = useState('')
@@ -29,13 +29,13 @@ function SelectedProject({ selectedProject, onClose, projects }) {
                 }
 
                 setInvestments([...investments, yeniYatirim])
+                onClose()
             }
 
 
-            const yeniBakiye = currentUser.balance - miktar
-            setCurrentUser({ ...currentUser, balance: yeniBakiye })
+            const yeniBakiye = currentUser.balance - miktar;
+            updateBalance(yeniBakiye);
             setYatirimMiktari('')
-            setErr('Başarılı')
         } else {
             setErr('Yeterli Paranız Yok')
             setYatirimMiktari('')
@@ -61,7 +61,7 @@ function SelectedProject({ selectedProject, onClose, projects }) {
                 value={yatirimMiktari}
                 onChange={(e) => setYatirimMiktari(e.target.value)}
             />
-            <p className={err === 'Başarılı' ? 'text-green-500' : 'text-red-500'}>
+            <p className='text-red-500'>
                 {err}
             </p>
             <div className='flex justify-between'>

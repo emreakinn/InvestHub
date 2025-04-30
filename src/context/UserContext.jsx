@@ -7,12 +7,11 @@ export const UserProvider = ({ children }) => {
     const [username, setUsername] = useState('')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
-    const [balance, setBalance] = useState(1000000)
 
     const [users, setUsers] = useState([])
 
     const [isLoggedIn, setIsLoggedIn] = useState(false)
-    const [currentUser, setCurrentUser] = useState({ balance: 0 });
+    const [currentUser, setCurrentUser] = useState(null);
     const [err, setErr] = useState(null)
 
     const login = (email, password) => {
@@ -31,8 +30,16 @@ export const UserProvider = ({ children }) => {
         setIsLoggedIn(false);
     };
 
+    const updateBalance = (newBalance) => {
+        const updatedUser = { ...currentUser, balance: newBalance };
+        setUsers(users.map(user =>
+            user.id === updatedUser.id ? updatedUser : user
+        ));
+        setCurrentUser(updatedUser);
+    };
+
     return (
-        <UserContext.Provider value={{ users, setUsers, isLoggedIn, setIsLoggedIn, currentUser, setCurrentUser, login, logout, err, setErr, username, setUsername, email, setEmail, password, setPassword, balance, setBalance }}>
+        <UserContext.Provider value={{ users, setUsers, isLoggedIn, setIsLoggedIn, currentUser, setCurrentUser, login, logout, err, setErr, username, setUsername, email, setEmail, password, setPassword, updateBalance }}>
             {children}
         </UserContext.Provider>
     );
