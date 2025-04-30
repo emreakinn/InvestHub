@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import './App.css'
 import LoginBtn from './components/buttons/LoginBtn'
 import RegisterBtn from './components/buttons/RegisterBtn'

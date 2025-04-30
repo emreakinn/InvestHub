@@ -7,7 +7,7 @@ import { UserContext } from './context/UserContext';
 function RegisterPage() {
 
     const navigate = useNavigate();
-    const { username, setUsername, email, setEmail, password, setPassword, users, setUsers, setCurrentUser, currentUser, setIsLoggedIn, err, setErr } = useContext(UserContext);
+    const { username, setUsername, email, setEmail, password, setPassword, users, setUsers, setCurrentUser, setIsLoggedIn, err, setErr } = useContext(UserContext);
 
     useEffect(() => {
         setErr('')
